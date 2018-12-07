@@ -3,5 +3,4 @@ FROM gcr.io/$project_id/android:base
 
 ARG aosp_version
 
-# Update 
-RUN sdkmanager "platforms;android-${aosp_version}"
+
