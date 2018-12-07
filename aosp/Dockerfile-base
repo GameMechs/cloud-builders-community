@@ -1,0 +1,32 @@
+# we use a gcr.io image and not openjdk:8-jdk-slim because it loads faster in the google Google Cloud Build environment
+FROM gcr.io/cloud-builders/javac
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# make Apt non-interactive
+RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90builder \
+  && echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90builder
+
+# Install Dependencies
+RUN apt-get update && \
+    apt-get install -y \
+        git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 \
+        lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc unzip
+
+# Set timezone to UTC by default
+RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
+# Use unicode
+RUN locale-gen C.UTF-8 || true
+ENV LANG=C.UTF-8
+
+# Install Repo
+RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /bin/repo
+RUN chmod a+x /bin/repo
+
+RUN sudo mkdir ${aosp_home}
+
+COPY for_branch /bin
+COPY run_build /bin
+
+ENTRYPOINT ["bash", "/bin/run_build"]
