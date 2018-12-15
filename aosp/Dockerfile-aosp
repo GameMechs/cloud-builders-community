@@ -1,5 +1,5 @@
 ARG project_id
-FROM gcr.io/$project_id/android:base
+FROM gcr.io/$project_id/aosp:base
 
 ARG aosp_version
 

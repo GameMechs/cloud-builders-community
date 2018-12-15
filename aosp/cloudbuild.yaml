@@ -25,3 +25,6 @@ images:
   - 'gcr.io/$PROJECT_ID/aosp:${_AOSP_VERSION}'
 
 timeout: 2000s
+
+options:
+  machineType: 'N1_HIGHCPU_32'
